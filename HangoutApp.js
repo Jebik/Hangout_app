@@ -11,8 +11,12 @@ function inArray(string, array)
 */
 var target = 
 [
-    "Etitia Arnaud",
-    "Pierre-Harvald Chevalier"
+    "Etitia Arnaud"
+];
+
+var guardian =
+[
+	"Benjamin LEDRAPPIER"
 ];
 
 /*
@@ -48,14 +52,51 @@ function load_participant()
     	var participant = participants[index];
     	if (inArray(participant.person.displayName, target))
     	{
-    		html += '<p>' + participant.person.displayName + ' (TARGET)</p>';
+    		html += '<p>' + participant.person.displayName + ' <input class="button" type="button" value="DECIBLER" onClick="delTarget(\'' + participant.person.displayName + '\')"/></p>';
 	    	muted.push(participant.id);
 	    }
+	    else if(inArray(participant.person.displayName, guardian))
+	    	html += '<p>' + participant.person.displayName + ' (GUARDIAN)</p>';
     	else
-	    	html += '<p>' + participant.person.displayName + '</p>';
+	    	html += '<p>' + participant.person.displayName + ' <input class="button" type="button" value="CIBLER" onClick="addTarget(\'' + participant.person.displayName + '\')"/></p>';
   	}
   	document.getElementById('hangout_participant').innerHTML = html;
   	document.getElementById('hangout_participant').style.visibility = 'visible';
+}
+
+function addTarget(name) 
+{
+	var local = gapi.hangout.getLocalParticipant();
+	if (inArray(local.person.displayName, guardian))
+	{
+		realAdd(name);
+	}
+}
+
+function realAdd(name) 
+{
+	target.push(name);
+}
+
+function delTarget(name) 
+{
+	var local = gapi.hangout.getLocalParticipant();
+	if (inArray(local.person.displayName, guardian))
+	{
+		realDel(name);
+	}
+}
+
+function realDel(name)
+{
+	for(var i = 0; i < target.length ; i++) 
+	{
+	    if(target[i] == name) 
+	    {
+    	   target.splice(i, 1);
+    	   break;
+    	}
+	}
 }
 
 function isTarget() 
@@ -112,7 +153,7 @@ function muteLoop()
 
 function updateCheckbox()
 {
-	var check = gapi.hangout.data.getValue('AM_statut')
+	var check = gapi.hangout.data.getValue('AM_statut');
 	if (check == 'true')
 		document.getElementById('AM-checkbox').checked = true;
 	else
