@@ -46,9 +46,9 @@ function load_participant()
 {
 	var participants = gapi.hangout.getParticipants();
 	muted = [];
-  	if (isTarget)
+  	if (isTarget())
   		html = '';
-  	else if (isGuardian)
+  	else if (isGuardian())
   		html = adminLoad(participants);
   	else
   		html = normalLoad(participants);
