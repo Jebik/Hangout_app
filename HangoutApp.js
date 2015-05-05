@@ -46,31 +46,56 @@ function load_participant()
 {
 	var participants = gapi.hangout.getParticipants();
 	muted = [];
+  	if (isTarget)
+  		html = '';
+  	else if (isGuardian)
+  		html = adminLoad(participants);
+  	else
+  		html = normalLoad(participants);
+
+  	document.getElementById('hangout_participant').innerHTML = html;
+  	document.getElementById('hangout_participant').style.visibility = 'visible';
+}
+
+function adminLoad(participants)
+{
   	var html = '';
   	for (var index in participants) 
   	{
     	var participant = participants[index];
     	if (inArray(participant.person.displayName, target))
-    	{
     		html += '<p>' + participant.person.displayName + ' <input class="button" type="button" value="DECIBLER" onClick="delTarget(\'' + participant.person.displayName + '\')"/></p>';
-	    	muted.push(participant.id);
-	    }
 	    else if(inArray(participant.person.displayName, guardian))
-	    	html += '<p>' + participant.person.displayName + ' (GUARDIAN)</p>';
+	    	html += '<p>' + participant.person.displayName + ' (DIEU)</p>';
     	else
 	    	html += '<p>' + participant.person.displayName + ' <input class="button" type="button" value="CIBLER" onClick="addTarget(\'' + participant.person.displayName + '\')"/></p>';
   	}
-  	document.getElementById('hangout_participant').innerHTML = html;
-  	document.getElementById('hangout_participant').style.visibility = 'visible';
+  	return html;
 }
+
+function normalLoad()
+{
+  	var html = '';
+  	for (var index in participants) 
+  	{
+    	var participant = participants[index];
+    	if (inArray(participant.person.displayName, target))
+    		html += '<p>' + participant.person.displayName + ' (CIBLE)</p>';
+	    else if(inArray(participant.person.displayName, guardian))
+	    	html += '<p>' + participant.person.displayName + ' (DIEU)</p>';
+    	else
+	    	html += '<p>' + participant.person.displayName + ' </p>';
+  	}
+  	return html;
+}
+
+
 
 function addTarget(name) 
 {
 	var local = gapi.hangout.getLocalParticipant();
-	if (inArray(local.person.displayName, guardian))
-	{
+	if (isGuardian())
 		realAdd(name);
-	}
 }
 
 function realAdd(name) 
@@ -82,10 +107,8 @@ function realAdd(name)
 function delTarget(name) 
 {
 	var local = gapi.hangout.getLocalParticipant();
-	if (inArray(local.person.displayName, guardian))
-	{
+	if (isGuardian())
 		realDel(name);
-	}
 }
 
 function realDel(name)
@@ -104,6 +127,12 @@ function isTarget()
 {
 	var local = gapi.hangout.getLocalParticipant();
 	return inArray(local.person.displayName, target);
+}
+
+function isGuardian() 
+{
+	var local = gapi.hangout.getLocalParticipant();
+	return inArray(local.person.displayName, guardian);
 }
 
 var BaseURL = 'https://raw.githubusercontent.com/Jebik/Hangout_app/master/static/';
