@@ -64,7 +64,7 @@ function isTarget()
 	return inArray(local.person.displayName, target);
 }
 
-var BaseURL = 'http://cartes.nhova.fr/hangout/static/';
+var BaseURL = 'https://raw.githubusercontent.com/Jebik/Hangout_app/master/static/';
 var SoundURL = [];
 var SoundHG = [];
 var muted = [];
