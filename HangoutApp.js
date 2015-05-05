@@ -16,7 +16,8 @@ var target =
 
 var guardian =
 [
-	"Benjamin LEDRAPPIER"
+	"Benjamin LEDRAPPIER",
+	"Pierre-Harvald Chevalier"
 ];
 
 /*
