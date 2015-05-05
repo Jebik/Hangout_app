@@ -45,7 +45,6 @@ function init()
 function load_participant()
 {
 	var participants = gapi.hangout.getParticipants();
-	muted = [];
   	if (isTarget())
   		html = '';
   	else if (isGuardian())
@@ -55,6 +54,17 @@ function load_participant()
 
   	document.getElementById('hangout_participant').innerHTML = html;
   	document.getElementById('hangout_participant').style.visibility = 'visible';
+}
+
+function buildMuted(participants)
+{
+	muted = [];
+	for (var index in participants) 
+  	{
+    	var participant = participants[index];
+    	if (inArray(participant.person.displayName, target))
+    		muted.push(participant.id);
+  	}
 }
 
 function adminLoad(participants)
@@ -70,10 +80,11 @@ function adminLoad(participants)
     	else
 	    	html += '<p>' + participant.person.displayName + ' <input class="button" type="button" value="CIBLER" onClick="addTarget(\'' + participant.person.displayName + '\')"/></p>';
   	}
+  	buildMuted(participants);
   	return html;
 }
 
-function normalLoad()
+function normalLoad(participants)
 {
   	var html = '';
   	for (var index in participants) 
@@ -86,6 +97,7 @@ function normalLoad()
     	else
 	    	html += '<p>' + participant.person.displayName + ' </p>';
   	}
+  	buildMuted(participants)
   	return html;
 }
 
@@ -117,8 +129,9 @@ function realDel(name)
 	{
 	    if(target[i] == name) 
 	    {
-    	   target.splice(i, 1);
-    	   break;
+    		target.splice(i, 1);
+			load_participant();
+    		break;
     	}
 	}
 }
