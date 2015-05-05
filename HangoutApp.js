@@ -76,6 +76,7 @@ function addTarget(name)
 function realAdd(name) 
 {
 	target.push(name);
+	load_participant();
 }
 
 function delTarget(name) 
